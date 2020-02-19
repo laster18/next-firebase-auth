@@ -2,3 +2,4 @@ node_modules
 .next
 dist
 .env
+src/config/index.ts

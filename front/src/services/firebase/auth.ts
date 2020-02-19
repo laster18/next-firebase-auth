@@ -22,3 +22,11 @@ export const doPasswordUpdate = async (password: string) => {
     return Promise.reject(new Error('No authenticated user.'))
   }
 }
+
+export const doGetIdToken = () => {
+  if (auth.currentUser) {
+    return auth.currentUser.getIdToken()
+  } else {
+    return Promise.reject(new Error('No authenticated user.'))
+  }
+}

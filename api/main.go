@@ -2,10 +2,23 @@ package main
 
 import (
 	"api/routers"
+	"fmt"
+	"os"
 
-	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
+
+func init() {
+	/* 環境変数を.envからよみこみ */
+	err := godotenv.Load(fmt.Sprintf("./%s.env", os.Getenv("GO_ENV")))
+	if err != nil {
+		fmt.Println("failed load .env")
+	}
+
+	fmt.Println("env", os.Getenv("FIREBASE_KEYFILE_JSON"))
+}
 
 func main() {
 	router := gin.Default()

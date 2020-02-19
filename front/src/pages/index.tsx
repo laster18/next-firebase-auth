@@ -1,11 +1,12 @@
-import { useContext } from 'react'
-import { NextPage } from 'next'
+// import { useContext } from 'react'
+import { NextPage, ExNextPageContext } from 'next'
+import Link from 'next/link'
 import { Container, Grid, Image, Divider } from 'semantic-ui-react'
-import { fetchHello } from '~/utils/api'
-import SessionContext from '~/context/session'
-import { Session } from '~/models'
-import withAuthorization from '~/components/Session/withAuthorization'
+// import SessionContext from '~/context/session'
+// import { Session } from '~/models'
+// import withAuthorization from '~/components/Session/withAuthorization'
 import Layout from '~/components/Layout'
+import { getPrivateMessage } from '~/utils/api'
 
 const text = `Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
 commodo ligula eget dolor. Aenean massa strong. Cum sociis natoque
@@ -21,29 +22,16 @@ dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla
 ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam
 ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi.`
 
-const IndexPage: NextPage = () => {
-  const session = useContext(SessionContext)
-
-  console.log('contextから取り出したsession: ', session)
+const IndexPage: NextPage<{ message: string }> = ({ message }) => {
+  // const session = useContext(SessionContext)
 
   return (
     <Layout header>
+      <Link href="/private">
+        <a>private</a>
+      </Link>
       <Container text>
-        <p>
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
-          commodo ligula eget dolor. Aenean massa strong. Cum sociis natoque
-          penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-          Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.
-          Nulla consequat massa quis enim. Donec pede justo, fringilla vel,
-          aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut,
-          imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede link
-          mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum
-          semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula,
-          porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante,
-          dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla
-          ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam
-          ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi.
-        </p>
+        <p>Message: {message}</p>
       </Container>
       <Container text>
         <Grid columns={3} doubling>
@@ -75,18 +63,27 @@ const IndexPage: NextPage = () => {
   )
 }
 
-IndexPage.getInitialProps = async ctx => {
-  const isServer = !!ctx.req
+IndexPage.getInitialProps = async (ctx: ExNextPageContext) => {
+  console.log('hogeeeeeeeeeeeeeeeeeeeee!!!!!!!!!!!!!!!!!')
+
+  let token: string | null = null
+  if (ctx.req) {
+    console.log('ctx.req.session: ', ctx.req.session?.jwt)
+    token = ctx.req.session?.jwt || null
+  }
 
   try {
-    const data = await fetchHello(isServer)
+    const res = await getPrivateMessage(token, !!ctx.req)
 
-    console.log('data: ', data)
+    const message = res.data.message
+    return { message }
   } catch (error) {
-    console.log('error: ', error)
+    return { message: '' }
   }
 }
 
-const condition = (session: Session) => !!session.authUser
+// const condition = (session: Session) => !!session.authUser
 
-export default withAuthorization(condition)(IndexPage)
+// export default withAuthorization(condition)(IndexPage)
+
+export default IndexPage

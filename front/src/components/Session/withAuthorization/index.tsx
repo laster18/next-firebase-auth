@@ -11,7 +11,7 @@ const withAuthorization = (condition: Condition) => (
   const router = useRouter()
   const session = React.useContext(SessionContext)
 
-  console.log('withAuthorization内 session: ', session)
+  // console.log('withAuthorization内 session: ', session)
 
   React.useEffect(() => {
     if (!session.isSessionChecked) {

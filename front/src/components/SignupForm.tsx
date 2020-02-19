@@ -27,12 +27,23 @@ const SignupForm: React.FC = () => {
   const handleSignup = async () => {
     if (!!formData.email && !!formData.password) {
       try {
-        await doCreateUserWithEmailAndPassword(
+        const res = await doCreateUserWithEmailAndPassword(
           formData.email,
           formData.password,
         )
 
-        router.push('/')
+        if (res.user) {
+          res.user
+            .getIdToken()
+            .then(token => {
+              localStorage.setItem('jwt', token)
+            })
+            .catch(error => {
+              console.log(error)
+            })
+
+          router.push('/')
+        }
       } catch (error) {
         console.log('error: ', error.message)
       }

@@ -3,11 +3,41 @@ import { Thread, ThreadDetail, Post } from '../models'
 
 const BASE_URL_ON_SERVER = 'http://api:8080/api/v1'
 const BASE_URL_ON_FRONT = 'http://localhost:8080/api/v1'
+const FRONT_SERVER_URL = 'http://localhost:3001'
+
+export const doLogin = async (token: string) => {
+  return axios.post<{ status: string; message: string }>(
+    `${FRONT_SERVER_URL}/login`,
+    { token },
+  )
+}
+
+export const doLogout = async () => {
+  await axios.post<{ status: string; message: string }>(
+    `${FRONT_SERVER_URL}/logout`,
+  )
+}
 
 const getBaseUrl = (isServer: boolean) => {
   if (isServer) return BASE_URL_ON_SERVER
 
   return BASE_URL_ON_FRONT
+}
+
+export const getPrivateMessage = async (
+  token: string | null,
+  isServer: boolean,
+) => {
+  let jwt = token || null
+  if (!jwt && !isServer) {
+    jwt = localStorage.getItem('jwt')
+  }
+
+  return axios.get<{ message: string }>(`${getBaseUrl(isServer)}/private`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  })
 }
 
 export const fetchHello = async (isServer: boolean) => {
