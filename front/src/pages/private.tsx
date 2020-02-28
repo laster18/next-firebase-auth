@@ -26,15 +26,6 @@ const PrivatePage: NextPage<{ message: string }> = ({ message }) => {
     <Layout header>
       <h2>Private Page</h2>
       <p>message: {message}</p>
-      {/* <div>
-        <h3>Content:</h3>
-        <p>{content}</p>
-      </div>
-      <div>
-        <button onClick={handleGetToken}>getToken</button>
-        <h3>Token:</h3>
-        <p>{token}</p>
-      </div> */}
     </Layout>
   )
 }

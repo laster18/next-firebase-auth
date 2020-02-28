@@ -2,13 +2,11 @@ import React from 'react'
 import Link from 'next/link'
 import styled from 'styled-components'
 import { doSignOut } from '~/services/firebase/auth'
-import { doLogout } from '~/utils/api'
+import { logout } from '~/utils/auth'
 
 const HeaderComponent: React.FC = () => {
   const handleLogout = () => {
-    localStorage.removeItem('jwt')
-    doSignOut()
-    doLogout()
+    doSignOut().then(() => logout())
   }
 
   return (
@@ -22,7 +20,9 @@ const HeaderComponent: React.FC = () => {
       <Link href={`/login`}>
         <a>TopPage</a>
       </Link>
-      <button onClick={handleLogout}>Sign Out</button>
+      <button type="button" onClick={handleLogout}>
+        Sign Out
+      </button>
     </Continer>
   )
 }
