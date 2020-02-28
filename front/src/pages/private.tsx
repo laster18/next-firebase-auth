@@ -1,27 +1,14 @@
-import { useState } from 'react'
 import { NextPage, ExNextPageContext } from 'next'
 import Router from 'next/router'
-import { parseCookies, setCookie } from 'nookies'
 import Layout from '~/components/Layout'
-import { doGetIdToken } from '~/services/firebase/auth'
 import { getPrivateMessage } from '~/utils/api'
-// import {} from '~/auth'
+import { withAuthSync } from '~/utils/auth'
 
-const PrivatePage: NextPage<{ message: string }> = ({ message }) => {
-  // const session = useContext(SessionContext)
-  // const [token, setToken] = useState('')
+interface PrivatePageProps {
+  message: string
+}
 
-  // const handleGetToken = async () => {
-  //   try {
-  //     const idToken = await doGetIdToken()
-
-  //     console.log('idToken: ', idToken)
-  //     setToken(idToken)
-  //   } catch (error) {
-  //     console.log('error: ', error)
-  //   }
-  // }
-
+const PrivatePage: NextPage<PrivatePageProps> = ({ message }) => {
   return (
     <Layout header>
       <h2>Private Page</h2>
@@ -61,4 +48,4 @@ PrivatePage.getInitialProps = async (ctx: ExNextPageContext) => {
 
 // export default withAuthorization(condition)(IndexPage)
 
-export default PrivatePage
+export default withAuthSync(PrivatePage)
