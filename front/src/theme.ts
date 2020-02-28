@@ -3,7 +3,7 @@ const theme = {
     small: '10',
     base: '14',
     medium: '16',
-    large: '24'
+    large: '24',
   },
   color: {
     primary: '#007FB1',
@@ -16,12 +16,12 @@ const theme = {
     lightGray: '#979797',
     ultraLightGray: '#e4e4e4',
     skyBlue: '#CAE7F2',
-    yellow: '#FFE600'
+    yellow: '#FFE600',
   },
   size: {
     headerHeight: '80',
-    footerHeight: '80'
-  }
+    footerHeight: '80',
+  },
 }
 
 export default theme
