@@ -11,7 +11,8 @@ import {
   Input,
 } from 'semantic-ui-react'
 import { doSignInWithEmailAndPassword } from '~/services/firebase/auth'
-import { doLogin } from '~/utils/api'
+// import { doLogin } from '~/utils/api'
+import { login } from '~/utils/auth'
 
 const useFormState = <T extends object>(initialState: T) => {
   const [formData, setFormData] = useState(initialState)
@@ -27,7 +28,6 @@ const useFormState = <T extends object>(initialState: T) => {
 }
 
 const SignupForm: React.FC = () => {
-  const router = useRouter()
   const { formData, onChange } = useFormState({ email: '', password: '' })
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -46,19 +46,11 @@ const SignupForm: React.FC = () => {
           res.user
             .getIdToken()
             .then(token => {
-              localStorage.setItem('jwt', token)
-              try {
-                const res = doLogin(token)
-                console.log('loggedIn! res: ', res)
-              } catch (error) {
-                console.log('login error: ', error)
-              }
+              login({ token })
             })
             .catch(error => {
               console.log(error)
             })
-
-          router.push('/')
         }
       } catch (error) {
         console.log('error: ', error)

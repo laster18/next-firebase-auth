@@ -19,6 +19,9 @@ const HeaderComponent: React.FC = () => {
       <Link href={`/login`}>
         <a>Login</a>
       </Link>
+      <Link href={`/login`}>
+        <a>TopPage</a>
+      </Link>
       <button onClick={handleLogout}>Sign Out</button>
     </Continer>
   )

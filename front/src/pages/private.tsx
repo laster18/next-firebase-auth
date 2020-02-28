@@ -1,29 +1,32 @@
 import { useState } from 'react'
-import { NextPage, NextPageContext } from 'next'
+import { NextPage, ExNextPageContext } from 'next'
+import Router from 'next/router'
 import { parseCookies, setCookie } from 'nookies'
 import Layout from '~/components/Layout'
 import { doGetIdToken } from '~/services/firebase/auth'
+import { getPrivateMessage } from '~/utils/api'
 // import {} from '~/auth'
 
-const PrivatePage: NextPage<{ content: string }> = ({ content }) => {
+const PrivatePage: NextPage<{ message: string }> = ({ message }) => {
   // const session = useContext(SessionContext)
-  const [token, setToken] = useState('')
+  // const [token, setToken] = useState('')
 
-  const handleGetToken = async () => {
-    try {
-      const idToken = await doGetIdToken()
+  // const handleGetToken = async () => {
+  //   try {
+  //     const idToken = await doGetIdToken()
 
-      console.log('idToken: ', idToken)
-      setToken(idToken)
-    } catch (error) {
-      console.log('error: ', error)
-    }
-  }
+  //     console.log('idToken: ', idToken)
+  //     setToken(idToken)
+  //   } catch (error) {
+  //     console.log('error: ', error)
+  //   }
+  // }
 
   return (
     <Layout header>
       <h2>Private Page</h2>
-      <div>
+      <p>message: {message}</p>
+      {/* <div>
         <h3>Content:</h3>
         <p>{content}</p>
       </div>
@@ -31,44 +34,36 @@ const PrivatePage: NextPage<{ content: string }> = ({ content }) => {
         <button onClick={handleGetToken}>getToken</button>
         <h3>Token:</h3>
         <p>{token}</p>
-      </div>
+      </div> */}
     </Layout>
   )
 }
 
-PrivatePage.getInitialProps = async ctx => {
+PrivatePage.getInitialProps = async (ctx: ExNextPageContext) => {
   console.log('PrivatePage.getInitialProps!')
-
-  setCookie(ctx, 'token', 'koreha_token_desu', {
-    maxAge: 30 * 24 * 60 * 60,
-    path: '/',
-  })
-  // console.log('ctx.res: ', ctx.res)
-  console.log('ctx.req: ', ctx.req?.headers.cookie)
-  const cookie = parseCookies(ctx)
-  console.log({ cookie })
-
-  // const hoge = cookie.token
-
-  // const isServer = !!ctx.req
-
-  // try {
-  //   const data = await fetchHello(isServer)
-
-  //   console.log('data: ', data)
-  // } catch (error) {
-  //   console.log('error: ', error)
-  // }
-
-  const { res, req } = ctx
+  const {
+    res,
+    auth: { token },
+  } = ctx
 
   // ログインしてなかった場合のリダイレクト処理
-  if (res) {
-    res.writeHead(302, { Location: '/' })
-    res.end()
-  }
+  const redirectOnError = () =>
+    res
+      ? res.writeHead(302, { Location: '/login' }).end()
+      : Router.push('/login')
 
-  return { content: 'これがメッセージ!!!update!!!!' }
+  try {
+    if (!token) throw new Error('not exists token.')
+
+    const res = await getPrivateMessage(token)
+
+    const message = res.data.message
+    return { message }
+  } catch (error) {
+    console.log('error: ', error)
+    await redirectOnError()
+    return { message: 'fetchでエラーが発生しました' }
+  }
 }
 
 // const condition = (session: Session) => !!session.authUser

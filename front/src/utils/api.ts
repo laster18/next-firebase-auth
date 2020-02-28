@@ -18,40 +18,32 @@ export const doLogout = async () => {
   )
 }
 
-const getBaseUrl = (isServer: boolean) => {
+const isServer = typeof window === 'undefined'
+
+const getBaseUrl = () => {
   if (isServer) return BASE_URL_ON_SERVER
 
   return BASE_URL_ON_FRONT
 }
 
-export const getPrivateMessage = async (
-  token: string | null,
-  isServer: boolean,
-) => {
-  let jwt = token || null
-  if (!jwt && !isServer) {
-    jwt = localStorage.getItem('jwt')
-  }
+export const getPrivateMessage = async (token: string) => {
+  console.log('isServer: ', isServer)
 
-  return axios.get<{ message: string }>(`${getBaseUrl(isServer)}/private`, {
+  return axios.get<{ message: string }>(`${getBaseUrl()}/private`, {
     headers: {
-      Authorization: `Bearer ${jwt}`,
+      Authorization: `Bearer ${token}`,
     },
   })
 }
 
-export const fetchHello = async (isServer: boolean) => {
-  const resp = await axios.get<{ message: string }>(
-    `${getBaseUrl(isServer)}/hello`,
-  )
+export const fetchHello = async () => {
+  const resp = await axios.get<{ message: string }>(`${getBaseUrl()}/hello`)
 
   return resp.data
 }
 
-export const fetchThreadsApi = async (isServer: boolean) => {
-  const resp = await axios.get<{ threads: Thread[] }>(
-    `${getBaseUrl(isServer)}/threads`,
-  )
+export const fetchThreadsApi = async () => {
+  const resp = await axios.get<{ threads: Thread[] }>(`${getBaseUrl()}/threads`)
 
   return { threads: resp.data.threads }
 }
@@ -61,7 +53,7 @@ export const fetchTreadDetailApi = async (
   tid: string | string[],
 ) => {
   const resp = await axios.get<{ thread: ThreadDetail }>(
-    `${getBaseUrl(isServer)}/threads/${tid}`,
+    `${getBaseUrl()}/threads/${tid}`,
   )
 
   return { threadDetail: resp.data.thread }
