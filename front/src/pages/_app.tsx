@@ -1,13 +1,13 @@
 import React from 'react'
+import { NextPageContext } from 'next'
 import App, { AppContext } from 'next/app'
 import { useRouter } from 'next/router'
 import { ThemeProvider, createGlobalStyle } from 'styled-components'
+import { loadAuthFromCookie, AuthContext, Auth } from '~/auth'
 import ContextProvider from '~/context'
 import theme from '~/theme'
 import { PageTransition } from 'next-page-transitions'
-
 import Loader from '~/components/Loader'
-
 import 'semantic-ui-css/semantic.min.css'
 
 const TIMEOUT = 400
@@ -92,23 +92,36 @@ const MyComponent: React.FC<{ children: React.ReactElement }> = ({
   )
 }
 
-export default class MyApp extends App {
-  static async getInitialProps({ Component, ctx }: AppContext) {
+export default class MyApp extends App<{ auth: Auth }> {
+  // static async getInitialProps({ Component, ctx }: AppContext) {
+  // getInitialPropsでauthを渡したいのでComponentの型をanyにしている
+  // うまく型拡張ができるようにしたい
+  static async getInitialProps({
+    Component,
+    ctx,
+  }: {
+    Component: any
+    ctx: NextPageContext
+  }) {
     let pageProps = {}
 
+    const auth = loadAuthFromCookie(ctx)
+
     if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx)
+      pageProps = await Component.getInitialProps({ ...ctx, auth })
     }
 
     return { pageProps }
   }
 
   render() {
-    const { Component, pageProps } = this.props
+    const { Component, pageProps, auth } = this.props
 
     return (
       <MyComponent>
-        <Component {...pageProps} />
+        <AuthContext.Provider value={auth}>
+          <Component {...pageProps} />
+        </AuthContext.Provider>
       </MyComponent>
     )
   }

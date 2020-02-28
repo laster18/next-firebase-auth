@@ -64,7 +64,7 @@ const IndexPage: NextPage<{ message: string }> = ({ message }) => {
 }
 
 IndexPage.getInitialProps = async (ctx: ExNextPageContext) => {
-  console.log('hogeeeeeeeeeeeeeeeeeeeee!!!!!!!!!!!!!!!!!')
+  console.log('hogeeeeeeeeeeeeeeeeeeeee!!!!!!!!!!!!!!!!!: ', ctx.auth)
 
   let token: string | null = null
   if (ctx.req) {

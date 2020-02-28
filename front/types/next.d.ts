@@ -7,6 +7,9 @@ declare module 'next' {
   type ExNextPageContext = NextPageContext & {
     req?: Express.Request
     res?: Express.Response
+    auth: {
+      token?: string
+    }
   }
 }
 
@@ -16,5 +19,8 @@ declare module 'next/document' {
   > = DocumentContext<Q> & {
     req?: Express.Request
     res?: Express.Response
+    auth: {
+      token?: string
+    }
   }
 }
