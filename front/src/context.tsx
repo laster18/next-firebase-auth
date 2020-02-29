@@ -39,8 +39,6 @@ const useAuthentication = () => {
 const Provider: React.FC = ({ children }) => {
   const [sampleState, setSampleState] = useState({ name: 'hogeeeee' })
   const session = useAuthentication()
-  // console.log('provider内:')
-  // console.log('session: ', session)
 
   return (
     <SampleProvider value={{ value: sampleState, setSampleState }}>
