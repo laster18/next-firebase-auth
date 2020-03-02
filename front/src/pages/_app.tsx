@@ -7,9 +7,7 @@ import NProgress from 'nprogress'
 import { ThemeProvider } from 'styled-components'
 import { loadAuthFromCookie, AuthContext, Auth } from '~/auth'
 import theme from '~/theme'
-import { PageTransition } from 'next-page-transitions'
-import Loader from '~/components/Loader'
-import { GlobalStyle, TIMEOUT } from '~/styles'
+import { GlobalStyle } from '~/styles'
 import 'semantic-ui-css/semantic.min.css'
 
 Router.events.on('routeChangeStart', url => {
@@ -32,21 +30,9 @@ const MyComponent: React.FC<{ children: React.ReactElement }> = ({
       </Head>
       <GlobalStyle />
       <ThemeProvider theme={theme}>
-        <PageTransition
-          timeout={TIMEOUT}
-          classNames="page-transition"
-          loadingClassNames="loading-indicator"
-          loadingComponent={<Loader />}
-          loadingDelay={500}
-          loadingTimeout={{
-            enter: TIMEOUT,
-            exit: 0,
-          }}
-        >
-          {React.cloneElement(children, {
-            key: router.route,
-          })}
-        </PageTransition>
+        {React.cloneElement(children, {
+          key: router.route,
+        })}
       </ThemeProvider>
     </>
   )

@@ -1,7 +1,11 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import Head from 'next/head'
+import { Container } from 'semantic-ui-react'
 import Header from '~/components/Header'
+import { PageTransition } from 'next-page-transitions'
+import Loader from '~/components/Loader'
+import { TIMEOUT } from '~/styles'
 
 type Props = {
   title?: string
@@ -24,12 +28,26 @@ const Layout: React.FC<Props> = ({
       />
     </Head>
     {header && <Header />}
-    <Body header={header}>{children}</Body>
+    <PageTransition
+      timeout={TIMEOUT}
+      classNames="page-transition"
+      loadingClassNames="loading-indicator"
+      loadingComponent={<Loader />}
+      loadingDelay={500}
+      loadingTimeout={{
+        enter: TIMEOUT,
+        exit: 0,
+      }}
+    >
+      <Container text>
+        <Body header={header}>{children}</Body>
+      </Container>
+    </PageTransition>
   </div>
 )
 
 const Body = styled.div<{ header: boolean }>`
-  color: ${props => props.theme.color.gray};
+  padding: 20px 0;
   ${({ theme, header }) =>
     header
       ? css`
