@@ -34,6 +34,9 @@ func Setup() {
 	if err != nil {
 		fmt.Println("failed to connect database err: ", err)
 	}
+
+	// debug
+	Db.LogMode(true)
 }
 
 func Close() {

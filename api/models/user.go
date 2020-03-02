@@ -29,3 +29,7 @@ func (u *User) Fetch(uid string) error {
 func (u *User) FindOrCreate(uid string) {
 	db.Db.Where(User{UID: uid}).FirstOrCreate(&u)
 }
+
+func (u *User) UpdateProfile(displayName string) {
+	db.Db.Model(&u).Update("DisplayName", displayName)
+}

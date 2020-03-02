@@ -30,9 +30,22 @@ func GetPrivate(c *gin.Context) {
 	})
 }
 
+type ProfileForm struct {
+	DisplayName string `json:"displayName" binding:"required"`
+}
+
 func PostProfile(c *gin.Context) {
+	var form ProfileForm
+	if err := c.Bind(&form); err != nil {
+		fmt.Println("form bind error: ", err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+	}
+
 	user := c.MustGet("user").(models.User)
-	fmt.Println("In PostProfile user: ", user)
+	user.UpdateProfile(form.DisplayName)
+	c.JSON(http.StatusOK, user)
 }
 
 func Authenticate() gin.HandlerFunc {
@@ -91,7 +104,7 @@ func InitRouter(r *gin.Engine) {
 		// sample API
 		prefixV1.GET("/hello", hello)
 		prefixV1.GET("/private", Authenticate(), GetPrivate)
-		// prefixV1.GET("/login", GetToken)
+		prefixV1.POST("/profile", Authenticate(), PostProfile)
 		// prefixV1.GET("/private", checkJWT(), GetPrivate)
 	}
 }
