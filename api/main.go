@@ -1,26 +1,38 @@
 package main
 
 import (
+	"api/config"
+	"api/db"
 	"api/routers"
 	"fmt"
 	"os"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
 )
 
 func init() {
 	/* 環境変数を.envからよみこみ */
-	err := godotenv.Load(fmt.Sprintf("./%s.env", os.Getenv("GO_ENV")))
+	// err := godotenv.Load(fmt.Sprintf("./%s.env", os.Getenv("GO_ENV")))
+	err := godotenv.Load(".env")
 	if err != nil {
-		fmt.Println("failed load .env")
+		fmt.Println("failed load .env err: ", err)
 	}
 
 	fmt.Println("env", os.Getenv("FIREBASE_KEYFILE_JSON"))
 }
 
 func main() {
+	// setup Config
+	config.Setup()
+
+	// setup DB
+	db.Setup()
+	defer db.Close()
+
+	// setup Router
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"http://localhost:3000", "http://localhost:3001"},

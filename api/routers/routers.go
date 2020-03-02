@@ -57,7 +57,8 @@ func Authenticate(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	fmt.Printf("Verified ID token: %v\n", token)
+	// fmt.Printf("Verified ID token: %v\n", token)
+	fmt.Printf("UID: %v\n", token.UID)
 }
 
 func InitRouter(r *gin.Engine) {
