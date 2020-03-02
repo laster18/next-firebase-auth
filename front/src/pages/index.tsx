@@ -7,7 +7,7 @@ const IndexPage: NextPage = () => {
 
 IndexPage.getInitialProps = async (ctx: ExNextPageContext) => {
   // 必要な情報をfetchする
-  console.log('ctx: ', ctx)
+  // console.log('ctx: ', ctx)
 }
 
 export default IndexPage

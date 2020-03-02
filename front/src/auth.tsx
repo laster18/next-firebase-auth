@@ -1,9 +1,30 @@
 import React, { useEffect } from 'react'
-import { ExNextPageContext, NextComponentType } from 'next'
+import { NextPageContext, ExNextPageContext, NextComponentType } from 'next'
+import { parseCookies } from 'nookies'
 import Router from 'next/router'
 import cookie from 'js-cookie'
 
 const AFTER_LOGIN_URL = '/'
+
+export interface Auth {
+  token?: string
+}
+
+export function loadAuthFromCookie(ctx: NextPageContext): Auth {
+  const { token } = parseCookies(ctx)
+  return { token }
+}
+
+export const AuthContext = React.createContext<Auth>({})
+
+export function useAuth() {
+  const auth = React.useContext(AuthContext)
+  return {
+    auth,
+    login: () => {}, // ログイン処理
+    logout: () => {}, // ログアウト処理
+  }
+}
 
 export const login = ({ token }: { token: string }) => {
   cookie.set('token', token, { expires: 1 })

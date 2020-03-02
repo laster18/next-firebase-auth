@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { Button, Form, Message, Segment, Grid, Header } from 'semantic-ui-react'
 import { doCreateUserWithEmailAndPassword } from '~/services/firebase/auth'
-import { login } from '~/utils/auth'
+import { login } from '~/auth'
 
 const useFormState = <T extends object>(initialState: T) => {
   const [formData, setFormData] = useState(initialState)

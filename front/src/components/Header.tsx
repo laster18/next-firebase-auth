@@ -1,9 +1,8 @@
 import React from 'react'
 import Link from 'next/link'
 import { Container, Dropdown, Menu } from 'semantic-ui-react'
-import styled from 'styled-components'
 import { doSignOut } from '~/services/firebase/auth'
-import { logout } from '~/utils/auth'
+import { logout } from '~/auth'
 
 const HeaderComponent: React.FC = () => {
   const handleLogout = () => {
@@ -25,16 +24,12 @@ const HeaderComponent: React.FC = () => {
           <Menu.Item position="right">
             <Dropdown item simple text="Account">
               <Dropdown.Menu>
-                <Dropdown.Item>
-                  <Link href={`/signup`}>
-                    <StyledLink>Sign Up</StyledLink>
-                  </Link>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Link href={`/login`}>
-                    <StyledLink>Login</StyledLink>
-                  </Link>
-                </Dropdown.Item>
+                <Link href={`/signup`}>
+                  <Dropdown.Item as="a">Sign Up</Dropdown.Item>
+                </Link>
+                <Link href={`/login`}>
+                  <Dropdown.Item as="a">Login</Dropdown.Item>
+                </Link>
                 <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -44,9 +39,5 @@ const HeaderComponent: React.FC = () => {
     </div>
   )
 }
-
-const StyledLink = styled.a`
-  color: rgba(0, 0, 0, 0.87) !important;
-`
 
 export default HeaderComponent

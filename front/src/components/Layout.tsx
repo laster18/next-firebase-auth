@@ -3,9 +3,9 @@ import styled, { css } from 'styled-components'
 import Head from 'next/head'
 import { Container } from 'semantic-ui-react'
 import Header from '~/components/Header'
-import { PageTransition } from 'next-page-transitions'
-import Loader from '~/components/Loader'
-import { TIMEOUT } from '~/styles'
+// import { PageTransition } from 'next-page-transitions'
+// import Loader from '~/components/Loader'
+// import { TIMEOUT } from '~/styles'
 
 type Props = {
   title?: string
@@ -28,7 +28,7 @@ const Layout: React.FC<Props> = ({
       />
     </Head>
     {header && <Header />}
-    <PageTransition
+    {/* <PageTransition
       timeout={TIMEOUT}
       classNames="page-transition"
       loadingClassNames="loading-indicator"
@@ -38,11 +38,11 @@ const Layout: React.FC<Props> = ({
         enter: TIMEOUT,
         exit: 0,
       }}
-    >
-      <Container text>
-        <Body header={header}>{children}</Body>
-      </Container>
-    </PageTransition>
+    > */}
+    <Container text>
+      <Body header={header}>{children}</Body>
+    </Container>
+    {/* </PageTransition> */}
   </div>
 )
 

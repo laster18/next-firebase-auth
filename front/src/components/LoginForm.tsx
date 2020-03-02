@@ -10,7 +10,7 @@ import {
   Input,
 } from 'semantic-ui-react'
 import { doSignInWithEmailAndPassword } from '~/services/firebase/auth'
-import { login } from '~/utils/auth'
+import { login } from '~/auth'
 
 const useFormState = <T extends object>(initialState: T) => {
   const [formData, setFormData] = useState(initialState)

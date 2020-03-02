@@ -2,7 +2,7 @@ import { NextPage, ExNextPageContext } from 'next'
 import Router from 'next/router'
 import Layout from '~/components/Layout'
 import { getPrivateMessage } from '~/utils/api'
-import { withAuthSync } from '~/utils/auth'
+import { withAuthSync } from '~/auth'
 
 interface PrivatePageProps {
   message: string
