@@ -5,7 +5,6 @@ export default class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
     const sheet = new ServerStyleSheet()
     const originalRenderPage = ctx.renderPage
-    // console.log('hoge! in document! ctx:', ctx)
 
     try {
       ctx.renderPage = () =>

@@ -1,5 +1,4 @@
 FROM node:12.14.0-alpine as devtools
-
 RUN apk add git g++ gcc libgcc libstdc++ linux-headers make python \
   && npm install npm@latest -g \
   && npm install node-gyp -g

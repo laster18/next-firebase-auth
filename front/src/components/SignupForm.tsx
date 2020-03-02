@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { Button, Form, Message, Segment, Grid, Header } from 'semantic-ui-react'
 import { doCreateUserWithEmailAndPassword } from '~/services/firebase/auth'
+import { login } from '~/utils/auth'
 
 const useFormState = <T extends object>(initialState: T) => {
   const [formData, setFormData] = useState(initialState)
@@ -18,7 +18,6 @@ const useFormState = <T extends object>(initialState: T) => {
 }
 
 const SignupForm: React.FC = () => {
-  const router = useRouter()
   const { formData, handleChange } = useFormState({
     email: '',
     password: '',
@@ -36,13 +35,11 @@ const SignupForm: React.FC = () => {
           res.user
             .getIdToken()
             .then(token => {
-              localStorage.setItem('jwt', token)
+              login({ token })
             })
             .catch(error => {
               console.log(error)
             })
-
-          router.push('/')
         }
       } catch (error) {
         console.log('error: ', error.message)

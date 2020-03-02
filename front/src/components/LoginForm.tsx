@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import {
   Button,
   Form,
@@ -11,7 +10,6 @@ import {
   Input,
 } from 'semantic-ui-react'
 import { doSignInWithEmailAndPassword } from '~/services/firebase/auth'
-// import { doLogin } from '~/utils/api'
 import { login } from '~/utils/auth'
 
 const useFormState = <T extends object>(initialState: T) => {
