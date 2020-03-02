@@ -3,7 +3,7 @@ import { useState } from 'react'
 const initialFormStatus = {
   isLoading: false,
   error: false,
-  message: ''
+  message: '',
 }
 
 const useForm = <T extends { [key: string]: string }>(initialState: T) => {
@@ -11,17 +11,17 @@ const useForm = <T extends { [key: string]: string }>(initialState: T) => {
   const [formStatus, setFormStatus] = useState({
     isLoading: false,
     error: false,
-    message: ''
+    message: '',
   })
 
   const onChangeText = (
     e:
       | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>
+      | React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     })
   }
 
@@ -36,7 +36,7 @@ const useForm = <T extends { [key: string]: string }>(initialState: T) => {
     setFormData,
     setFormStatus,
     reset,
-    onChangeText
+    onChangeText,
   }
 }
 

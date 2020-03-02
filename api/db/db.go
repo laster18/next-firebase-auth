@@ -22,8 +22,6 @@ func getConnectString() string {
 func gormConnect() (*gorm.DB, error) {
 	DRIVER := config.Db.Driver
 	CONNECT := getConnectString()
-	fmt.Println("Driver: ", DRIVER)
-	fmt.Println("CONNECT: ", CONNECT)
 	db, err := gorm.Open(DRIVER, CONNECT)
 	return db, err
 }

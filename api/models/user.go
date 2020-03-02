@@ -30,6 +30,7 @@ func (u *User) FindOrCreate(uid string) {
 	db.Db.Where(User{UID: uid}).FirstOrCreate(&u)
 }
 
-func (u *User) UpdateProfile(displayName string) {
-	db.Db.Model(&u).Update("DisplayName", displayName)
+func (u *User) SetInitialProfile(displayName string) {
+	// db.Db.Model(&u).Update("DisplayName", displayName)
+	db.Db.Model(&u).Updates(map[string]interface{}{"DisplayName": displayName, "Initialized": true})
 }

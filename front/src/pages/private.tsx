@@ -3,6 +3,7 @@ import Router from 'next/router'
 import Layout from '~/components/Layout'
 import { getPrivateMessage } from '~/utils/api'
 import { withAuthSync } from '~/auth'
+import { AxiosError } from 'axios'
 
 interface PrivatePageProps {
   message: string
@@ -24,11 +25,20 @@ PrivatePage.getInitialProps = async (ctx: ExNextPageContext) => {
     auth: { token },
   } = ctx
 
-  // ログインしてなかった場合のリダイレクト処理
-  const redirectOnError = () =>
+  // ログインしてなかった場合+initial処理してなかったときのリダイレクト処理
+  const redirectOnError = (error: AxiosError) => {
+    let redirectUrl = '/login'
+    if (
+      error.response?.status === 404 &&
+      error.response.data.message === 'not initialized.'
+    ) {
+      redirectUrl = '/initial'
+    }
+
     res
-      ? res.writeHead(302, { Location: '/login' }).end()
-      : Router.push('/login')
+      ? res.writeHead(302, { Location: redirectUrl }).end()
+      : Router.push(redirectUrl)
+  }
 
   try {
     if (!token) throw new Error('not exists token.')
@@ -39,13 +49,9 @@ PrivatePage.getInitialProps = async (ctx: ExNextPageContext) => {
     return { message }
   } catch (error) {
     console.log('error: ', error)
-    await redirectOnError()
+    await redirectOnError(error)
     return { message: 'fetchでエラーが発生しました' }
   }
 }
-
-// const condition = (session: Session) => !!session.authUser
-
-// export default withAuthorization(condition)(IndexPage)
 
 export default withAuthSync(PrivatePage)

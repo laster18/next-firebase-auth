@@ -44,11 +44,11 @@ func PostProfile(c *gin.Context) {
 	}
 
 	user := c.MustGet("user").(models.User)
-	user.UpdateProfile(form.DisplayName)
+	user.SetInitialProfile(form.DisplayName)
 	c.JSON(http.StatusOK, user)
 }
 
-func Authenticate() gin.HandlerFunc {
+func Authenticate(initialiedCheck bool) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 		// Firebase SDK のセットアップ
@@ -86,11 +86,14 @@ func Authenticate() gin.HandlerFunc {
 		// find or create
 		user := models.User{}
 		user.FindOrCreate(token.UID)
-		if user.Initialized == false {
-			c.JSON(http.StatusNotFound, gin.H{
-				"message": "not initialized.",
-			})
-			c.Abort()
+
+		if initialiedCheck {
+			if user.Initialized == false {
+				c.JSON(http.StatusNotFound, gin.H{
+					"message": "not initialized.",
+				})
+				c.Abort()
+			}
 		}
 
 		c.Set("user", user)
@@ -103,8 +106,8 @@ func InitRouter(r *gin.Engine) {
 	{
 		// sample API
 		prefixV1.GET("/hello", hello)
-		prefixV1.GET("/private", Authenticate(), GetPrivate)
-		prefixV1.POST("/profile", Authenticate(), PostProfile)
+		prefixV1.GET("/private", Authenticate(true), GetPrivate)
+		prefixV1.POST("/profile", Authenticate(false), PostProfile)
 		// prefixV1.GET("/private", checkJWT(), GetPrivate)
 	}
 }
