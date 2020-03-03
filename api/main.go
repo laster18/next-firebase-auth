@@ -33,6 +33,7 @@ func main() {
 	db.Setup()
 	defer db.Close()
 	db.Db.AutoMigrate(&models.User{})
+	db.Db.AutoMigrate(&models.Post{})
 
 	// setup Router
 	router := gin.Default()

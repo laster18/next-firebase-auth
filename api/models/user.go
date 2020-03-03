@@ -12,6 +12,7 @@ type User struct {
 	UID         string
 	DisplayName string `gorm:"default:'名無しさん'"`
 	Initialized bool   `gorm:"default:false"`
+	Post        []Post
 }
 
 func (u *User) CheckInitialized(uid string) (bool, error) {
@@ -31,6 +32,5 @@ func (u *User) FindOrCreate(uid string) {
 }
 
 func (u *User) SetInitialProfile(displayName string) {
-	// db.Db.Model(&u).Update("DisplayName", displayName)
 	db.Db.Model(&u).Updates(map[string]interface{}{"DisplayName": displayName, "Initialized": true})
 }

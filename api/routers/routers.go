@@ -1,18 +1,13 @@
 package routers
 
 import (
+	"api/middlewares"
 	"api/models"
-	"context"
+	v1 "api/routers/v1"
 	"fmt"
-	"log"
 	"net/http"
-	"os"
-	"strings"
 
-	firebase "firebase.google.com/go"
 	"github.com/gin-gonic/gin"
-	"golang.org/x/oauth2/google"
-	"google.golang.org/api/option"
 )
 
 func hello(c *gin.Context) {
@@ -48,66 +43,21 @@ func PostProfile(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-func Authenticate(initialiedCheck bool) gin.HandlerFunc {
-
-	return func(c *gin.Context) {
-		// Firebase SDK のセットアップ
-		ctx := context.Background()
-		credentials, err := google.CredentialsFromJSON(ctx, []byte(os.Getenv("FIREBASE_KEYFILE_JSON")))
-		if err != nil {
-			log.Printf("error credentials from json: %v\n", err)
-		}
-
-		opt := option.WithCredentials(credentials)
-		app, err := firebase.NewApp(ctx, nil, opt)
-		if err != nil {
-			log.Printf("error initializing app: %v\n", err)
-		}
-		auth, err := app.Auth(context.Background())
-
-		// Headerからtokenを取り出す
-		authHeader := c.GetHeader("Authorization")
-		fmt.Println("authHeader: ", authHeader)
-		idToken := strings.Replace(authHeader, "Bearer ", "", 1)
-		fmt.Println("idToken: ", idToken)
-
-		// JWTの検証
-		token, err := auth.VerifyIDToken(context.Background(), idToken)
-		if err != nil {
-			fmt.Printf("error verifying ID token: %v\n", err)
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"message": "error verifying ID token",
-			})
-			c.Abort()
-			return
-		}
-		fmt.Printf("UID: %v, type: %T \n", token.UID, token.UID)
-
-		// find or create
-		user := models.User{}
-		user.FindOrCreate(token.UID)
-
-		if initialiedCheck {
-			if user.Initialized == false {
-				c.JSON(http.StatusNotFound, gin.H{
-					"message": "not initialized.",
-				})
-				c.Abort()
-			}
-		}
-
-		c.Set("user", user)
-	}
-}
-
 func InitRouter(r *gin.Engine) {
 	prefixV1 := r.Group("/api/v1")
-
 	{
-		// sample API
 		prefixV1.GET("/hello", hello)
-		prefixV1.GET("/private", Authenticate(true), GetPrivate)
-		prefixV1.POST("/profile", Authenticate(false), PostProfile)
-		// prefixV1.GET("/private", checkJWT(), GetPrivate)
+		prefixV1.GET("/private", middlewares.Authentication(true), GetPrivate)
+		prefixV1.POST("/profile", middlewares.Authentication(false), PostProfile)
+	}
+
+	v1Users := prefixV1.Group("/users")
+	{
+		v1Users.POST("/users/profile", middlewares.Authentication(false), PostProfile)
+	}
+
+	v1Posts := prefixV1.Group("/posts")
+	{
+		v1Posts.GET("/posts", v1.GetPosts)
 	}
 }
