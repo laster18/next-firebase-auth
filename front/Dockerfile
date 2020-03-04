@@ -1,10 +1,12 @@
 FROM node:12.14.0-alpine as devtools
-RUN apk add git g++ gcc libgcc libstdc++ linux-headers make python \
-  && npm install npm@latest -g \
-  && npm install node-gyp -g
+RUN apk add git g++ gcc libgcc libstdc++ linux-headers make python
+  # && npm install npm@latest -g \
+  # && npm install node-gyp -g
 WORKDIR /app
-COPY package.json package-lock*.json /app/
-RUN npm install
+# COPY package.json package-lock*.json /app/
+COPY package.json yarn.lock /app/
+# RUN npm install
+RUN yarn install
 
 FROM node:12.14.0-alpine as base
 WORKDIR /app
@@ -16,7 +18,8 @@ EXPOSE 3000
 FROM base as development
 ENV NODE_ENV=development
 ENV PATH=/app/node_modules/.bin:$PATH
-CMD ["npm", "run", "dev"]
+# CMD ["npm", "run", "dev"]
+CMD ["yarn", "dev"]
 
 # # Production Image
 FROM base as production
