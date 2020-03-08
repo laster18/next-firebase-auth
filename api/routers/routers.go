@@ -50,15 +50,21 @@ func InitRouter(r *gin.Engine) {
 		prefixV1.GET("/private", middlewares.Authentication(true), GetPrivate)
 		prefixV1.POST("/profile", middlewares.Authentication(false), PostProfile)
 	}
-
-	v1Users := prefixV1.Group("/users")
 	{
-		v1Users.POST("/users/profile", middlewares.Authentication(false), PostProfile)
+		prefixV1.POST("/users/profile", middlewares.Authentication(false), PostProfile)
 	}
 
-	// v1Posts := prefixV1.Group("/posts")
+	/* posts API */
 	{
 		prefixV1.GET("/posts", v1.GetPosts)
 		prefixV1.POST("/posts", middlewares.Authentication(true), v1.CreatePost)
+		prefixV1.DELETE("/posts/:id", middlewares.Authentication(true), v1.DeletePost)
+		prefixV1.PUT("/posts/:id", middlewares.Authentication(true), v1.UpdatePost)
+	}
+
+	/* likes API */
+	{
+		prefixV1.POST("/posts/:id/like", middlewares.Authentication(true), v1.UpdatePost)
+		prefixV1.DELETE("/posts/:id/like", middlewares.Authentication(true), v1.UpdatePost)
 	}
 }

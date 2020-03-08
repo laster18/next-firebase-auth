@@ -66,6 +66,7 @@
 - returns
   - (204, {"message": "ok"})
   - (400, {"message": "Delete Error"})
+  - (403, {"message": "Forbidden"})
   - (404, {"message": "Not Found"})
 
 #### PUT: /api/v1/posts/:id
@@ -76,6 +77,7 @@
 - returns
   - (200, {post_info})
   - (400, {"message": "Update Error"})
+  - (403, {"message": "Forbidden"})
   - (404, {"message": "Not Found"})
 
 ### `likes`

@@ -4,7 +4,7 @@
 CREATE TABLE users (
   id int UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   firebase_uid varchar(255) UNIQUE NOT NULL,
-  display_name varchar(255) NOT NULL DEFAULT '',
+  display_name varchar(255) NOT NULL DEFAULT '名無しさん',
   icon_url varchar(255) NOT NULL DEFAULT '',
   profile_text varchar(255) NOT NULL DEFAULT '',
   initialized boolean NOT NULL DEFAULT '0',

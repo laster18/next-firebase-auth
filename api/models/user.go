@@ -3,16 +3,18 @@ package models
 import (
 	"api/db"
 	"fmt"
-
-	"github.com/jinzhu/gorm"
+	"time"
 )
 
 type User struct {
-	gorm.Model
-	UID         string `json:"-"`
-	DisplayName string `gorm:"default:'名無しさん'" json:"displayName"`
-	Initialized bool   `gorm:"default:false" json:"-"`
-	Post        []Post
+	Id          int       `json:"id"`
+	FirebaseUid string    `json:"-"`
+	DisplayName string    `json:"displayName"`
+	IconUrl     string    `json:"iconUrl"`
+	ProfileText string    `json:"profileText"`
+	Initialized bool      `json:"-"`
+	CreatedAt   time.Time `json:"createdAt"`
+	UpdatedAt   time.Time `json:"updatedAt"`
 }
 
 func (u *User) CheckInitialized(uid string) (bool, error) {
@@ -28,7 +30,7 @@ func (u *User) Fetch(uid string) error {
 }
 
 func (u *User) FindOrCreate(uid string) {
-	db.Db.Where(User{UID: uid}).FirstOrCreate(&u)
+	db.Db.Where(User{FirebaseUid: uid}).FirstOrCreate(&u)
 }
 
 func (u *User) SetInitialProfile(displayName string) {

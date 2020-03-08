@@ -33,13 +33,10 @@ func Authentication(enableInbtialiedCheck bool) gin.HandlerFunc {
 
 		// Headerからtokenを取り出す
 		authHeader := c.GetHeader("Authorization")
-		fmt.Println("authHeader: ", authHeader)
 		idToken := strings.Replace(authHeader, "Bearer ", "", 1)
-		fmt.Println("idToken: ", idToken)
 
 		// JWTの検証
 		token, err := auth.VerifyIDToken(context.Background(), idToken)
-		fmt.Println("token: ", token)
 		if err != nil {
 			fmt.Printf("error verifying ID token: %v\n", err)
 			c.JSON(http.StatusUnauthorized, gin.H{
@@ -48,7 +45,6 @@ func Authentication(enableInbtialiedCheck bool) gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		fmt.Printf("UID: %v, type: %T \n", token.UID, token.UID)
 
 		// find or create
 		user := models.User{}
