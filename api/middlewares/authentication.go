@@ -15,7 +15,7 @@ import (
 	"google.golang.org/api/option"
 )
 
-func Authentication(initialiedCheck bool) gin.HandlerFunc {
+func Authentication(enableInbtialiedCheck bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Firebase SDK のセットアップ
 		ctx := context.Background()
@@ -54,7 +54,7 @@ func Authentication(initialiedCheck bool) gin.HandlerFunc {
 		user := models.User{}
 		user.FindOrCreate(token.UID)
 
-		if initialiedCheck {
+		if enableInbtialiedCheck {
 			if user.Initialized == false {
 				c.JSON(http.StatusNotFound, gin.H{
 					"message": "not initialized.",
@@ -63,6 +63,7 @@ func Authentication(initialiedCheck bool) gin.HandlerFunc {
 			}
 		}
 
+		// contextにuserをセット
 		c.Set("user", user)
 	}
 }

@@ -3,7 +3,6 @@ package main
 import (
 	"api/config"
 	"api/db"
-	"api/models"
 	"api/routers"
 	"fmt"
 
@@ -29,8 +28,6 @@ func main() {
 	// setup DB
 	db.Setup()
 	defer db.Close()
-	db.Db.AutoMigrate(&models.User{})
-	db.Db.AutoMigrate(&models.Post{})
 
 	// setup Router
 	router := gin.Default()

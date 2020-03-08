@@ -11,12 +11,15 @@ services:
     volumes:
       - ./api:/api
     environment:
+      DB_URL: tcp:db:3306*sample_db/root/password
       DB_DRIVER: mysql
       DB_USER: root
       DB_PASSWORD: password
-      DB_HOST: localhost
+      DB_HOST: db
       DB_PORT: 3306
       DB_NAME: sample_db
+    depends_on:
+      - db
   front:
     build:
       context: ./front
