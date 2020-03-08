@@ -13,7 +13,7 @@ func getConnectString() string {
 	PASSWORD := config.Db.Password
 	PROTOCOL := fmt.Sprintf("tcp(db:%s)", config.Db.Port)
 	DBNAME := config.Db.Name
-	QUERY := "?charset=utf8&parseTime=True&loc=Local"
+	QUERY := "?charset=utf8mb4&parseTime=True&loc=Local"
 	CONNECT := USER + ":" + PASSWORD + "@" + PROTOCOL + "/" + DBNAME + QUERY
 
 	return CONNECT

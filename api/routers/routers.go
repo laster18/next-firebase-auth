@@ -56,8 +56,9 @@ func InitRouter(r *gin.Engine) {
 		v1Users.POST("/users/profile", middlewares.Authentication(false), PostProfile)
 	}
 
-	v1Posts := prefixV1.Group("/posts")
+	// v1Posts := prefixV1.Group("/posts")
 	{
-		v1Posts.GET("/posts", v1.GetPosts)
+		prefixV1.GET("/posts", v1.GetPosts)
+		prefixV1.POST("/posts", middlewares.Authentication(true), v1.CreatePost)
 	}
 }

@@ -9,9 +9,9 @@ import (
 
 type User struct {
 	gorm.Model
-	UID         string
-	DisplayName string `gorm:"default:'名無しさん'"`
-	Initialized bool   `gorm:"default:false"`
+	UID         string `json:"-"`
+	DisplayName string `gorm:"default:'名無しさん'" json:"displayName"`
+	Initialized bool   `gorm:"default:false" json:"-"`
 	Post        []Post
 }
 

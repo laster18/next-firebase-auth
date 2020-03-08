@@ -15,10 +15,18 @@ type DbConf struct {
 	Name     string `env:"DB_NAME" envDefault:"sample_db"`
 }
 
+type GoConf struct {
+	Env string `env:"ENV" envDefault:"development"`
+}
+
 var Db DbConf
+var Go GoConf
 
 func Setup() {
 	if err := env.Parse(&Db); err != nil {
-		fmt.Printf("failed to load config %s", err)
+		fmt.Printf("failed to load Db env %s", err)
+	}
+	if err := env.Parse(&Go); err != nil {
+		fmt.Printf("failed to load Go env %s", err)
 	}
 }

@@ -39,6 +39,7 @@ func Authentication(initialiedCheck bool) gin.HandlerFunc {
 
 		// JWTの検証
 		token, err := auth.VerifyIDToken(context.Background(), idToken)
+		fmt.Println("token: ", token)
 		if err != nil {
 			fmt.Printf("error verifying ID token: %v\n", err)
 			c.JSON(http.StatusUnauthorized, gin.H{

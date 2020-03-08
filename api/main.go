@@ -6,7 +6,6 @@ import (
 	"api/models"
 	"api/routers"
 	"fmt"
-	"os"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -21,8 +20,6 @@ func init() {
 	if err != nil {
 		fmt.Println("failed load .env err: ", err)
 	}
-
-	fmt.Println("env", os.Getenv("FIREBASE_KEYFILE_JSON"))
 }
 
 func main() {
@@ -42,6 +39,7 @@ func main() {
 		AllowMethods: []string{"GET", "POST", "DELETE", "OPTIONS"},
 		AllowHeaders: []string{"Origin, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization"},
 	}))
+	router.Static("/assets", "./assets")
 	routers.InitRouter(router)
 	router.Run(":8080")
 }
