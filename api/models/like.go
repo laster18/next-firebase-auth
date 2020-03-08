@@ -1,6 +1,10 @@
 package models
 
-import "api/db"
+import (
+	"api/db"
+
+	"github.com/jinzhu/gorm"
+)
 
 type Like struct {
 	UserId int
@@ -19,5 +23,19 @@ func (l *Like) FetchByUserAndPostId() (err error) {
 
 func (l *Like) Delete() (err error) {
 	err = db.Db.Delete(&l).Error
+	return
+}
+
+func (l *Like) AfterCreate(db *gorm.DB) (err error) {
+	post := Post{Id: l.PostId}
+	err = post.FetchById()
+	db.Model(&post).Update("LikeCount", post.LikeCount+1)
+	return
+}
+
+func (l *Like) AfterDelete(db *gorm.DB) (err error) {
+	post := Post{Id: l.PostId}
+	err = post.FetchById()
+	db.Model(&post).Update("LikeCount", post.LikeCount-1)
 	return
 }

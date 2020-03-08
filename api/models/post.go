@@ -40,7 +40,7 @@ func (p *Post) Save() (err error) {
 	return
 }
 
-func (post *Post) Create() (err error) {
-	err = db.Db.Create(&post).Error
+func (p *Post) Create() (err error) {
+	err = db.Db.Create(&p).Error
 	return
 }
