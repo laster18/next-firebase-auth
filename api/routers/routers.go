@@ -44,7 +44,8 @@ func PostProfile(c *gin.Context) {
 }
 
 func InitRouter(r *gin.Engine) {
-	prefixV1 := r.Group("/api/v1")
+	prefix := "/api/v1"
+	prefixV1 := r.Group(prefix)
 	{
 		prefixV1.GET("/hello", hello)
 		prefixV1.GET("/private", middlewares.Authentication(true), GetPrivate)
@@ -54,17 +55,21 @@ func InitRouter(r *gin.Engine) {
 		prefixV1.POST("/users/profile", middlewares.Authentication(false), PostProfile)
 	}
 
-	/* posts API */
+	// Group: `/api/v1/posts`
+	posts := r.Group(fmt.Sprintf("%v/posts", prefix))
 	{
-		prefixV1.GET("/posts", v1.GetPosts)
-		prefixV1.POST("/posts", middlewares.Authentication(true), v1.CreatePost)
-		prefixV1.DELETE("/posts/:id", middlewares.Authentication(true), v1.DeletePost)
-		prefixV1.PUT("/posts/:id", middlewares.Authentication(true), v1.UpdatePost)
+		posts.GET("/", v1.GetPosts)
+		posts.POST("/", middlewares.Authentication(true), v1.CreatePost)
 	}
 
-	/* likes API */
+	// Group: `/api/v1/posts/:id`
+	postsById := r.Group(fmt.Sprintf("%v/posts/:id", prefix))
+	postsById.Use(middlewares.Authentication(true))
+	postsById.Use(middlewares.InjectPostById())
 	{
-		prefixV1.POST("/posts/:id/like", middlewares.Authentication(true), v1.UpdatePost)
-		prefixV1.DELETE("/posts/:id/like", middlewares.Authentication(true), v1.UpdatePost)
+		postsById.DELETE("/", v1.DeletePost)
+		postsById.PUT("/", v1.UpdatePost)
+		postsById.POST("/like", v1.CreateLike)
+		postsById.DELETE("/like", v1.DeleteLike)
 	}
 }

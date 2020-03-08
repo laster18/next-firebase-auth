@@ -91,9 +91,9 @@
   - none
 
 - returns
-  - (200, {"message": "liked"})
-  - (400, {"message": "ng"})
-  - (404, {"message": "Not Found"})
+  - (201, {"message": "liked"})
+  - (400, {"message": "Failed like"})
+  - (404, {"message": "Post is Not Found"})
 
 #### DELETE: /api/v1/posts/:id/like
 
@@ -102,5 +102,5 @@
 
 - returns
   - (204, {"message": "deleted"})
-  - (400, {"message": "ng"})
-  - (404, {"message": "Not Found"})
+  - (400, {"message": "Failed unlike"})
+  - (404, {"message": "Post is Not Found"})
