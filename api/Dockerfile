@@ -13,7 +13,8 @@ RUN apk update \
 # development build
 FROM base as development
 ENV GO_ENV=development
-RUN GO111MODULE=off go get -u github.com/codegangsta/gin
+# RUN GO111MODULE=off go get -u github.com/codegangsta/gin
+RUN GO111MODULE=off go get -u github.com/cosmtrek/air
 RUN chmod +x ./start.sh
 EXPOSE 8080
 ENTRYPOINT ["sh", "./start.sh"]

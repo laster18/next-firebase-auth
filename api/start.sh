@@ -13,5 +13,6 @@ echo "migrated!!!yeah!!!"
 if [ $GO_ENV = "production" ]; then
   /app/build
 elif [ $GO_ENV = "development" ]; then
-  gin -i run
+  # gin -i run
+  air -c air.conf
 fi
