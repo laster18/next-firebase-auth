@@ -1,13 +1,29 @@
 package v1
 
 import (
+	"api/db"
 	"api/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-func CreateLike(c *gin.Context) {
+type ILikeController interface {
+	Create(c *gin.Context)
+	Delete(c *gin.Context)
+}
+
+type LikeController struct {
+	sqlhandler db.ISqlHandler
+}
+
+func NewLikeController(sqlhandler db.ISqlHandler) ILikeController {
+	return &LikeController{
+		sqlhandler: sqlhandler,
+	}
+}
+
+func (lc *LikeController) Create(c *gin.Context) {
 	user := c.MustGet("user").(models.User)
 	post := c.MustGet("post").(models.Post)
 	like := models.Like{
@@ -24,7 +40,7 @@ func CreateLike(c *gin.Context) {
 	c.Status(http.StatusCreated)
 }
 
-func DeleteLike(c *gin.Context) {
+func (lc *LikeController) Delete(c *gin.Context) {
 	user := c.MustGet("user").(models.User)
 	post := c.MustGet("post").(models.Post)
 	like := models.Like{

@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"api/db"
 	"api/models"
 	"net/http"
 	"strconv"
@@ -8,11 +9,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func InjectPostById() gin.HandlerFunc {
+func InjectPostById(sqlhandler db.ISqlHandler) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		/* fetch post record */
 		postId, _ := strconv.Atoi(c.Param("id"))
-		post := models.Post{Id: postId}
+		post := models.Post{Id: postId, Db: sqlhandler}
 		if err := post.FetchById(); err != nil {
 			c.JSON(http.StatusNotFound, gin.H{
 				"messgage": "Post is not found",

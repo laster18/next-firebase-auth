@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"api/db"
 	"api/models"
 	"context"
 	"fmt"
@@ -15,7 +16,7 @@ import (
 	"google.golang.org/api/option"
 )
 
-func Authentication(enableInbtialiedCheck bool) gin.HandlerFunc {
+func Authentication(enableInitialiedCheck bool, sqlhandler db.ISqlHandler) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Firebase SDK のセットアップ
 		ctx := context.Background()
@@ -47,10 +48,10 @@ func Authentication(enableInbtialiedCheck bool) gin.HandlerFunc {
 		}
 
 		// find or create
-		user := models.User{}
+		user := models.User{Db: sqlhandler}
 		user.FindOrCreate(token.UID)
 
-		if enableInbtialiedCheck {
+		if enableInitialiedCheck {
 			if user.Initialized == false {
 				c.JSON(http.StatusNotFound, gin.H{
 					"message": "not initialized.",

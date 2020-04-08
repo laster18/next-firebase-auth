@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"api/db"
 	"api/models"
 	"api/services/imageUploader"
 	"fmt"
@@ -10,8 +11,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetPosts(c *gin.Context) {
-	var post models.Post
+type PostController struct {
+	SqlHandler db.ISqlHandler
+}
+
+func NewPostController(sqlhandler db.ISqlHandler) *PostController {
+	return &PostController{
+		SqlHandler: sqlhandler,
+	}
+}
+
+func (pc *PostController) Index(c *gin.Context) {
+	post := models.Post{Db: pc.SqlHandler}
 	posts := post.FetchPosts(10)
 
 	c.JSON(http.StatusOK, posts)
@@ -22,7 +33,7 @@ type CreateForm struct {
 	Image *multipart.FileHeader `form:"image" binding:"required"`
 }
 
-func CreatePost(c *gin.Context) {
+func (pc *PostController) Create(c *gin.Context) {
 	user := c.MustGet("user").(models.User)
 	var form CreateForm
 	if err := c.ShouldBind(&form); err != nil {
@@ -47,6 +58,7 @@ func CreatePost(c *gin.Context) {
 		Title:    form.Title,
 		ImageUrl: uploadedIamgeUrl,
 		UserId:   user.Id,
+		Db:       pc.SqlHandler,
 	}
 
 	if err := post.Create(); err != nil {
@@ -66,7 +78,7 @@ type UpdatePostForm struct {
 	Title string `json:"title" binding:"required"`
 }
 
-func UpdatePost(c *gin.Context) {
+func (pc *PostController) Update(c *gin.Context) {
 	post := c.MustGet("post").(models.Post)
 
 	var form UpdatePostForm
@@ -91,7 +103,7 @@ func UpdatePost(c *gin.Context) {
 	})
 }
 
-func DeletePost(c *gin.Context) {
+func (pc *PostController) Delete(c *gin.Context) {
 	post := c.MustGet("post").(models.Post)
 
 	err := post.Delete()
