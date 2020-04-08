@@ -29,6 +29,7 @@ func (lc *LikeController) Create(c *gin.Context) {
 	like := models.Like{
 		UserId: user.Id,
 		PostId: post.Id,
+		Db:     lc.sqlhandler,
 	}
 	if err := like.Create(); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -46,6 +47,7 @@ func (lc *LikeController) Delete(c *gin.Context) {
 	like := models.Like{
 		UserId: user.Id,
 		PostId: post.Id,
+		Db:     lc.sqlhandler,
 	}
 	if err := like.FetchByUserAndPostId(); err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
