@@ -2,7 +2,6 @@ package main
 
 import (
 	"api/config"
-	"api/db"
 	"api/routers"
 	"fmt"
 
@@ -24,10 +23,6 @@ func init() {
 func main() {
 	// setup Config
 	config.Setup()
-
-	// setup DB
-	db.Setup()
-	defer db.Close()
 
 	// setup Router
 	router := gin.Default()
