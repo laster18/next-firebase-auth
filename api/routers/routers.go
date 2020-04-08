@@ -58,12 +58,13 @@ func postLikesRouter(
 	router.DELETE("/posts/:id/like", func(c *gin.Context) { controller.Delete(c) })
 }
 
-func InitRouter(r *gin.Engine) {
+func Dispatch(r *gin.Engine) {
 	apiV1 := r.Group("/api/v1")
 	sqlhandler := db.NewSqlHandler()
 	middlewareHandler := middlewares.New(sqlhandler)
 
 	/* Dispatch routers */
+	sampleRouter(apiV1, sqlhandler, middlewareHandler)
 	userRouter(apiV1, sqlhandler, middlewareHandler)
 	postRouter(apiV1, sqlhandler, middlewareHandler)
 	postLikesRouter(apiV1, sqlhandler, middlewareHandler)

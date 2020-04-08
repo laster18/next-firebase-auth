@@ -32,6 +32,6 @@ func main() {
 		AllowHeaders: []string{"Origin, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization"},
 	}))
 	router.Static("/assets", "./assets")
-	routers.InitRouter(router)
+	routers.Dispatch(router)
 	router.Run(":8080")
 }
